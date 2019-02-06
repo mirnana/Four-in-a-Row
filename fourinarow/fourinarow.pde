@@ -1,4 +1,4 @@
-//specification
+// specifications
 int BOARDWIDTH=7, BOARDHEIGHT=6;
 int DIFFICULTY=2;
 int SPACESIZE=50;
@@ -7,27 +7,27 @@ int XMARGIN=(640-BOARDWIDTH*SPACESIZE)/2, YMARGIN=(480-BOARDHEIGHT*SPACESIZE)/2;
 int XREDPILE=int(SPACESIZE / 2); int YREDPILE=480 - int(3 * SPACESIZE / 2);
 int XYELLOWPILE=640 - int(3 * SPACESIZE / 2); int YYELLOWPILE=480 - int(3 * SPACESIZE / 2);
 
-//variables
+// variables
 PImage backg, red, yellow, boardim, arrow, computer, human, tie, mainmenu, rules;
 PFont orbitron;
-int[][] board = new int[BOARDHEIGHT][BOARDWIDTH]; //human: 1, computer: -1
+int[][] board = new int[BOARDHEIGHT][BOARDWIDTH]; // human: 1, computer: -1
 
 int column_g;
-int xcor, ycor; //coordinates of the tile that c/h is putting in the board
+int xcor, ycor; // coordinates of the currently active tile
 int step;
 float speed, dropSpeed;
 
 int beginning, end;
-int turn; //human: 1, computer: -1
+int turn; // human: 1, computer: -1
 int pressed;
-int gameScreen; //mainMenu: 0, game: 1, endGame: 2, rules: 3
+int gameScreen; // mainMenu: 0, game: 1, endGame: 2, rules: 3
 boolean showHelp, isFirstGame;
 boolean draggingToken, humanMove;
 int tokenx, tokeny;
 boolean mouseR;
 int winner;
 
-int r, t; //r is for rules, t is 0 for dark theme and 1 for light theme
+int r, t; // r: rules, t==0: dark theme, t==1; light theme
 
 void setup(){
   size(640, 480);
@@ -131,7 +131,6 @@ void draw(){
       noStroke();
     ellipse(108, 423, 62, 62);
 
-    
     if (mousePressed){
       if (overRect(195, 313, 250, 35))
         DIFFICULTY=1;
@@ -413,14 +412,13 @@ void mouseReleased(){
 }
 
 int getComputerMove(int diff){
-  // deklaracija potentialMoves
   int[] potentialMoves=getPotentialMoves(board, -1, diff);
   int bestMoveFitness=-1, i;
   for (i=0 ; i<BOARDWIDTH ; ++i){
     if (potentialMoves[i]>bestMoveFitness && isValidMove(board, i))
       bestMoveFitness=potentialMoves[i];
   }
-  // deklaracija bestMoves
+
   IntList bestMoves=new IntList();
   for (i=0 ; i<potentialMoves.length ; ++i)
     if (potentialMoves[i]==bestMoveFitness && isValidMove(board, i))
@@ -437,7 +435,6 @@ void deepCopy(int[][] board1, int[][] board2){
 }
 
 int[] getPotentialMoves(int[][] currBoard, int player, int diff){
-  // deklaracija potentialMoves
   int[] potentialMoves=new int[BOARDWIDTH];
   int i;
   for (i=0 ; i<BOARDWIDTH ; ++i)
@@ -492,7 +489,7 @@ int[] getPotentialMoves(int[][] currBoard, int player, int diff){
 }
 
 int getLowestEmptySpace(int[][] currBoard, int column){
-  // Return the row number of the lowest empty row in the given column.
+  // return the row number of the lowest empty row in the given column.
   for(int i=BOARDHEIGHT-1; i>=0 ; --i){
     if (currBoard[i][column]==0)
       return i;
