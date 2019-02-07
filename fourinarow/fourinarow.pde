@@ -26,6 +26,7 @@ boolean draggingToken, humanMove;
 int tokenx, tokeny;
 boolean mouseR;
 int winner;
+boolean win;
 
 int r, t; // r: rules, t==0: dark theme, t==1; light theme
 
@@ -67,6 +68,8 @@ void setup(){
   mouseR=false;
   
   r=0;
+  
+  win=false;
 }
 
 void draw(){
@@ -231,6 +234,7 @@ void draw(){
         if (isWinner(board, 1)){
           winner=1;
           gameScreen=2; // RESTART
+          win=true;
         }
         turn=-1;
         humanMove=false;
@@ -284,6 +288,7 @@ void draw(){
         if (isWinner(board, -1)){
           winner=-1;
           gameScreen=2; // RESTART
+          win=true;
         }
         turn=1;
         step=0;
@@ -292,7 +297,7 @@ void draw(){
       }
     }
   
-    if (isBoardFull(board)){
+    if (!win && isBoardFull(board)){
       winner=0;
       gameScreen=2; // RESTART
     }
@@ -308,6 +313,7 @@ void draw(){
      else
        image(tie, 640/2, 480/2);
      imageMode(CORNER);
+     win=false;
   }
   
   if(gameScreen==3){
