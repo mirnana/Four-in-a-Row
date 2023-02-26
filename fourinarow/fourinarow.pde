@@ -103,18 +103,24 @@ void draw(){
     stroke(206, 66, 56);
     if (overRect(195, 313, 250, 35))
       fill(185, 59, 50);
-    else
-      fill(206, 66, 56);
+    else {
+      if(DIFFICULTY == 1) fill(160, 52, 44);
+      else fill(206, 66, 56);
+    }
     rect(320, 330, 250, 35);
     if (overRect(195, 358, 250, 35))
       fill(185, 59, 50);
-    else
-      fill(206, 66, 56);
+    else {
+      if(DIFFICULTY == 2) fill(160, 52, 44);
+      else fill(206, 66, 56);
+    }
     rect(320, 375, 250, 35);
     if (overRect(195, 403, 250, 35))
       fill(185, 59, 50);
-    else
-      fill(206, 66, 56);
+    else {
+      if(DIFFICULTY == 3) fill(160, 52, 44);
+      else fill(206, 66, 56);
+    }
     rect(320, 420, 250, 35);
     textFont(orbitron);
     fill(0, 0, 0);
@@ -166,6 +172,23 @@ void draw(){
   }
   
   if (gameScreen==1){
+    rectMode(CENTER);
+    stroke(185, 59, 50);
+    if (overRect(540, 0, 100, 50))
+      fill(185, 59, 50);
+    else
+      fill(206, 66, 56);
+    rect(590, 25, 100, 50);
+    textFont(orbitron);
+    fill(0, 0, 0);
+    textAlign(CENTER, CENTER);
+    text("EXIT", 590, 25);
+    
+    if (mousePressed && overRect(540, 0, 100, 50)) {
+      beginning = 1;
+      gameScreen = 0;
+    }
+    
     if (beginning==1){
       if (isFirstGame){
         turn=-1; // computer: -1
