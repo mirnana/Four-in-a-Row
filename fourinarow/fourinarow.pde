@@ -1,3 +1,5 @@
+import ddf.minim.*;
+
 // specifications
 int BOARDWIDTH=7, BOARDHEIGHT=6;
 int DIFFICULTY=2;
@@ -9,6 +11,8 @@ int XYELLOWPILE=640 - int(3 * SPACESIZE / 2); int YYELLOWPILE=480 - int(3 * SPAC
 boolean MULTIPLAYER = false;
 
 // variables
+Minim minim;
+AudioPlayer backgroundMusic;
 PImage backg, red, yellow, boardim, arrow, computer, human, tie, mainmenu, rules, redWon, yellowWon;
 PFont orbitron;
 int[][] board = new int[BOARDHEIGHT][BOARDWIDTH]; // human: 1, computer: -1
@@ -34,6 +38,10 @@ int r, t; // r: rules, t==0: dark theme, t==1; light theme
 void setup(){
   size(640, 480);
   frameRate(FPS);
+  
+  minim = new Minim(this);
+  backgroundMusic = minim.loadFile("Sweet_Sun.mp3");
+  backgroundMusic.loop();
   
   backg=loadImage("background.png");
   backg.resize(640, 480);
@@ -166,8 +174,10 @@ void draw(){
         DIFFICULTY=3;
         MULTIPLAYER = false;
       }
-      else if (overRect(70, 105, 160, 100))
+      else if (overRect(70, 105, 160, 100)) {
+        backgroundMusic.pause();
         gameScreen=1;
+      }
       else if (overRect(240, 105, 160, 100))
         gameScreen=3;
       else if (overRect(410, 105, 160, 100))
@@ -206,6 +216,7 @@ void draw(){
     if (mousePressed && overRect(540, 0, 100, 50)) {
       beginning = 1;
       gameScreen = 0;
+      backgroundMusic.loop();
     }
     
     if (beginning==1){
@@ -297,6 +308,7 @@ void draw(){
           winner=p;
           gameScreen=2; // RESTART
           win=true;
+          backgroundMusic.loop();
         }
         if (turn == 1) {
           if (MULTIPLAYER) turn = 0;
@@ -360,6 +372,7 @@ void draw(){
           winner=-1;
           gameScreen=2; // RESTART
           win=true;
+          backgroundMusic.loop();
         }
         turn=1;
         step=0;
@@ -371,6 +384,7 @@ void draw(){
     if (!win && isBoardFull(board)){
       winner=2;
       gameScreen=2; // RESTART
+      backgroundMusic.loop();
     }
   }
   
