@@ -160,8 +160,10 @@ void draw(){
     ellipse(108, 423, 62, 62);
 
     if (mousePressed){
-      if (overRect(195, 225, 250, 35))
+      if (overRect(195, 225, 250, 35)) {
         MULTIPLAYER = true;
+        beginning = 1; 
+      }
       if (overRect(195, 313, 250, 35)) {
         DIFFICULTY=1;
         MULTIPLAYER = false;
@@ -213,12 +215,6 @@ void draw(){
     textAlign(CENTER, CENTER);
     text("EXIT", 590, 25);
     
-    if (mousePressed && overRect(540, 0, 100, 50)) {
-      beginning = 1;
-      gameScreen = 0;
-      backgroundMusic.loop();
-    }
-    
     if (beginning==1){
       if (isFirstGame){
         if (MULTIPLAYER) turn = 0;
@@ -226,9 +222,11 @@ void draw(){
         showHelp=true;
       }
       else{
-        if (round(random(0,1))==0)
+        print("here");
+        if (round(random(0,1))==0) {
           if (MULTIPLAYER) turn = 0;
           else turn=-1;
+        }
         else
           turn=1;
         showHelp=false;
@@ -240,11 +238,19 @@ void draw(){
         xcor=XREDPILE;
         ycor=YREDPILE;
       }
-      else{
+      else {
         xcor=XYELLOWPILE;
         ycor=YYELLOWPILE;
       }
+      if(!MULTIPLAYER) print("multiplayer = false & turn = ", turn, " & xcor = ", xcor, " & ycor = ", ycor, "\n");
+      drawTile(xcor, ycor, turn);
       beginning=0;
+    }
+    
+    if (mousePressed && overRect(540, 0, 100, 50)) {
+      beginning = 1;
+      gameScreen = 0;
+      backgroundMusic.loop();
     }
     
     if(turn==1 || turn==0){ // human
@@ -313,16 +319,15 @@ void draw(){
         if (turn == 1) {
           if (MULTIPLAYER) turn = 0;
           else turn=-1;
-          humanMove=false;
           xcor = XYELLOWPILE;
           ycor = YYELLOWPILE;
         }
         else if (turn == 0) {
           turn = 1;
-          humanMove=false;
           xcor = XREDPILE;
           ycor = YREDPILE;
         }
+        humanMove=false;
         step=0;
       }
     }
