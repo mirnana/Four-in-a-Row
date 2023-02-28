@@ -11,8 +11,8 @@ int XYELLOWPILE=640 - int(3 * SPACESIZE / 2); int YYELLOWPILE=480 - int(3 * SPAC
 boolean MULTIPLAYER = false;
 
 // variables
-Minim minim;
-AudioPlayer backgroundMusic;
+Minim minim, minimTileFall;
+AudioPlayer backgroundMusic, tileFall;
 PImage backg, red, yellow, boardim, arrow, computer, human, tie, mainmenu, rules, redWon, yellowWon;
 PFont orbitron;
 int[][] board = new int[BOARDHEIGHT][BOARDWIDTH]; // human: 1, computer: -1
@@ -222,7 +222,6 @@ void draw(){
         showHelp=true;
       }
       else{
-        print("here");
         if (round(random(0,1))==0) {
           if (MULTIPLAYER) turn = 0;
           else turn=-1;
@@ -242,8 +241,6 @@ void draw(){
         xcor=XYELLOWPILE;
         ycor=YYELLOWPILE;
       }
-      if(!MULTIPLAYER) print("multiplayer = false & turn = ", turn, " & xcor = ", xcor, " & ycor = ", ycor, "\n");
-      drawTile(xcor, ycor, turn);
       beginning=0;
     }
     
@@ -329,6 +326,7 @@ void draw(){
         }
         humanMove=false;
         step=0;
+        playTileFall();
       }
     }
     else if (!MULTIPLAYER){ // computer
@@ -383,6 +381,8 @@ void draw(){
         step=0;
         xcor=XREDPILE;
         ycor=YREDPILE;
+        
+        playTileFall();
       }
     }
   
@@ -644,4 +644,10 @@ boolean isWinner(int[][] currBoard, int player){
     }
   }
   return false;
+}
+
+void playTileFall() {
+  minimTileFall = new Minim(this);
+  tileFall = minimTileFall.loadFile("plastic fall.mp3");
+  tileFall.play();
 }
