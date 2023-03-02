@@ -26,6 +26,7 @@ int beginning, end;
 int turn; // human: 1, computer: -1, second human (only with multiplayer mode): 0
 int pressed;
 int gameScreen; // mainMenu: 0, game: 1, endGame: 2, rules: 3
+int PlayMusic = 1; // mute and play music
 boolean showHelp, isFirstGame;
 boolean draggingToken, humanMove;
 int tokenx, tokeny;
@@ -158,6 +159,12 @@ void draw(){
     else 
       noStroke();
     ellipse(108, 423, 62, 62);
+    
+    if(PlayMusic==0){
+      stroke(0);
+      strokeWeight(4);
+      line(560, 450, 620, 395);
+    }
 
     if (mousePressed){
       if (overRect(195, 225, 250, 35)) {
@@ -190,6 +197,14 @@ void draw(){
       else if (overCircle(108, 423, 62)){
         lightTheme(); t=1;
       }
+      else if (overCircle(588, 423, 70) && PlayMusic==1){
+        backgroundMusic.pause();
+        PlayMusic=0;
+      }
+      else if (overCircle(588, 423, 70)){
+        backgroundMusic.play();
+        PlayMusic=1;
+      }
     }
   }
   
@@ -214,6 +229,14 @@ void draw(){
     fill(0, 0, 0);
     textAlign(CENTER, CENTER);
     text("EXIT", 590, 25);
+    fill(206, 66, 56); //DODALA
+    text("DIFFICULTY:", 90, 25);
+    if(DIFFICULTY==1)
+    text("EASY", 46, 55);
+    else if(DIFFICULTY==2)
+    text("MEDIUM", 60, 55);
+    else 
+    text("HARD", 46, 55);
     
     if (beginning==1){
       if (isFirstGame){
