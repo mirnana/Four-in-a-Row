@@ -13,7 +13,7 @@ boolean MULTIPLAYER = false;
 // variables
 Minim minim, minimTileFall;
 AudioPlayer backgroundMusic, tileFall;
-PImage backg, red, yellow, boardim, arrow, computer, human, tie, mainmenu, rules, redWon, yellowWon;
+PImage backg, red, yellow, boardim, arrow, computer, human, tie, mainmenu, rules, redWon, yellowWon, mute, unmute;
 PFont orbitron;
 int[][] board = new int[BOARDHEIGHT][BOARDWIDTH]; // human: 1, computer: -1
 
@@ -35,11 +35,13 @@ int winner;
 boolean win;
 
 int r, t; // r: rules, t==0: dark theme, t==1; light theme
+boolean muted;
 
 void setup(){
   size(640, 480);
   frameRate(FPS);
   
+  muted = false;
   minim = new Minim(this);
   backgroundMusic = minim.loadFile("Sweet_Sun.mp3");
   backgroundMusic.loop();
@@ -66,6 +68,11 @@ void setup(){
   rules=loadImage("rules.png");
   rules.resize(640, 480);
   
+  mute = loadImage("mute.png");
+  mute.resize(SPACESIZE, SPACESIZE);
+  unmute = loadImage("unmute.png");
+  unmute.resize(SPACESIZE, SPACESIZE);
+  
   orbitron=createFont("orbitron-light.otf", 25);
   
   isFirstGame=true;
@@ -87,6 +94,11 @@ void setup(){
 void draw(){
   if (gameScreen==0){
     background(mainmenu);
+    
+    imageMode(CENTER);
+    if(muted) image(unmute, 55, 55);
+    else image(mute, 55, 55);
+    imageMode(CORNER);
     
     rectMode(CENTER);
     stroke(185, 59, 50, 50);
@@ -461,6 +473,16 @@ void mouseClicked(){
   if (gameScreen==3 && r>5){
     gameScreen=0;
     r=0;
+  }
+  if (gameScreen == 0 && overCircle(55,55,SPACESIZE)) {
+    if(muted) {
+      muted = false;
+      backgroundMusic.unmute();
+    }
+    else {
+      muted = true;
+      backgroundMusic.mute();
+    }
   }
 }
 
