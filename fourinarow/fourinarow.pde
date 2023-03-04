@@ -500,10 +500,6 @@ void mouseClicked(){
     gameScreen=0;
     r=0;
   }
-  if (gameScreen==4 && r>5){ // DODALA
-    gameScreen=0;
-    r=0;
-  }
   if (gameScreen == 0 && overCircle(55,55,SPACESIZE)) {
     if(muted) {
       muted = false;
