@@ -101,27 +101,41 @@ void draw(){
     
     rectMode(CENTER);
     stroke(185, 59, 50, 50);
-    if (overRect(70, 105, 160, 100))
-      fill(185, 59, 50);
+    //PLAY
+    if (overRect(17, 105, 135, 100)) 
+      fill(185, 59, 50); // BOJA BEZ HOVERA
     else
-      fill(185, 59, 50, 50);
-    rect(150, 155, 160, 100);
-    if (overRect(240, 105, 160, 100))
-      fill(185, 59, 50);
+      fill(185, 59, 50, 50); // BOJA S HOVEROM
+    rect(85, 155, 135, 100); // POZICIJA RECT
+    
+    //RULES
+    if (overRect(167, 105, 140, 100))
+      fill(185, 59, 50); // BOJA BEZ HOVERA
     else
-      fill(185, 59, 50, 50);
-    rect(320, 155, 160, 100);
-    if (overRect(410, 105, 160, 100))
-      fill(185, 59, 50);
+      fill(185, 59, 50, 50); // BOJA S HOVEROM
+    rect(237, 155, 140, 100); // POZICIJA RECT
+    
+    //SETTINGS
+    if (overRect(320, 105, 160, 100))
+      fill(185, 59, 50); // BOJA BEZ HOVERA
     else
-      fill(185, 59, 50, 50);
-    rect(490, 155, 160, 100);
+      fill(185, 59, 50, 50); // BOJA S HOVEROM
+    rect(400, 155, 160, 100);// POZICIJA RECT
+    
+    //QUIT
+    if (overRect(495, 105, 130, 100))
+      fill(185, 59, 50); // BOJA BEZ HOVERA
+    else
+      fill(185, 59, 50, 50); // BOJA S HOVEROM
+    rect(560, 155, 130, 100); // POZICIJA RECT
+    
     textFont(orbitron);
     fill(0, 0, 0);
     textAlign(CENTER, CENTER);
-    text("PLAY", 150, 155);
-    text("RULES", 320, 155);
-    text("QUIT", 490, 155);
+    text("PLAY", 90, 155);
+    text("RULES", 240, 155);
+    text("SETTINGS", 400, 155);
+    text("QUIT", 560, 155);
     
     stroke(206, 66, 56);
     if (overRect(195, 225, 250, 35))
@@ -188,13 +202,14 @@ void draw(){
         DIFFICULTY=3;
         MULTIPLAYER = false;
       }
-      else if (overRect(70, 105, 160, 100)) {
+      else if (overRect(17, 105, 135, 100)) { // PLAY PRIJELAZ 
         backgroundMusic.pause();
         gameScreen=1;
       }
-      else if (overRect(240, 105, 160, 100))
+      else if (overRect(167, 105, 140, 100)) // RULES PRIJELAZ
         gameScreen=3;
-      else if (overRect(410, 105, 160, 100))
+
+      else if (overRect(495, 105, 130, 100)) //QUIT PRIJELAZ
         exit();
       else if (overCircle(40, 423, 62)){
         darkTheme(); t=0;
