@@ -226,6 +226,14 @@ void draw(){
     fill(0, 0, 0);
     textAlign(CENTER, CENTER);
     text("EXIT", 590, 25);
+    fill(206, 66, 56); 
+    text("DIFFICULTY:", 90, 25);
+    if(DIFFICULTY==1)
+    text("EASY", 44, 55);
+    else if(DIFFICULTY==2)
+    text("MEDIUM", 60, 55);
+    else 
+    text("HARD", 46, 55);
     
     if (beginning==1){
       if (isFirstGame){
