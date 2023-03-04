@@ -13,7 +13,7 @@ boolean MULTIPLAYER = false;
 // variables
 Minim minim, minimTileFall;
 AudioPlayer backgroundMusic, tileFall;
-PImage backg, red, yellow, boardim, arrow, computer, human, tie, mainmenu, rules, redWon, yellowWon, mute, unmute;
+PImage backg, red, yellow, boardim, arrow, computer, human, tie, mainmenu, rules, redWon, yellowWon, mute, unmute, settings;
 PFont orbitron;
 int[][] board = new int[BOARDHEIGHT][BOARDWIDTH]; // human: 1, computer: -1
 
@@ -25,7 +25,7 @@ float speed, dropSpeed;
 int beginning, end;
 int turn; // human: 1, computer: -1, second human (only with multiplayer mode): 0
 int pressed;
-int gameScreen; // mainMenu: 0, game: 1, endGame: 2, rules: 3
+int gameScreen; // mainMenu: 0, game: 1, endGame: 2, rules: 3, settings: 4
 boolean showHelp, isFirstGame;
 boolean draggingToken, humanMove;
 int tokenx, tokeny;
@@ -66,6 +66,8 @@ void setup(){
   mainmenu.resize(640, 480);
   rules=loadImage("rules.png");
   rules.resize(640, 480);
+  settings=loadImage("settings.png");
+  settings.resize(640, 480);
   
   mute = loadImage("mute.png");
   mute.resize(SPACESIZE, SPACESIZE);
@@ -208,7 +210,8 @@ void draw(){
       }
       else if (overRect(167, 105, 140, 100)) // RULES PRIJELAZ
         gameScreen=3;
-
+      else if(overRect(320, 105, 160, 100)) // SETTINGS PRIJELAZ
+        gameScreen=4;
       else if (overRect(495, 105, 130, 100)) //QUIT PRIJELAZ
         exit();
       else if (overCircle(40, 423, 62)){
@@ -449,6 +452,29 @@ void draw(){
     background(rules);
     r++;
   }
+  
+  if(gameScreen==4){
+    background(settings); 
+    // EXIT
+    rectMode(CENTER);
+    stroke(185, 59, 50);
+    if (overRect(540, 0, 100, 50))
+      fill(185, 59, 50);
+    else
+      fill(206, 66, 56);
+    rect(590, 25, 100, 50);
+    textFont(orbitron);
+    fill(0, 0, 0);
+    textAlign(CENTER, CENTER);
+    text("EXIT", 590, 25);
+    fill(206, 66, 56);
+    
+    if (mousePressed && overRect(540, 0, 100, 50)) {
+      beginning = 1;
+      gameScreen = 0;
+      backgroundMusic.loop();
+    }
+  }
 }
 
 boolean overRect(int x, int y, int width, int height){
@@ -471,6 +497,10 @@ void mouseClicked(){
     gameScreen=0;
 	}
   if (gameScreen==3 && r>5){
+    gameScreen=0;
+    r=0;
+  }
+  if (gameScreen==4 && r>5){ // DODALA
     gameScreen=0;
     r=0;
   }
