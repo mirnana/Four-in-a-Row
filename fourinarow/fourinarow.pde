@@ -186,6 +186,7 @@ void draw(){
     else 
       noStroke();
     ellipse(108, 423, 62, 62);
+    fill(255,0,0);
 
     if (mousePressed){
       if (overRect(195, 225, 250, 35)) {
@@ -521,6 +522,7 @@ void darkTheme(){
   yellow.resize(SPACESIZE, SPACESIZE);
   boardim=loadImage("boardim.png");
   boardim.resize(SPACESIZE, SPACESIZE);
+
 }
 
 void lightTheme(){
