@@ -332,7 +332,9 @@ void draw(){
         mouseR=false;  
       
         int row=getLowestEmptySpace(board, column_g);
-      
+        column_g=(int)((xcor+SPACESIZE/2-XMARGIN)/SPACESIZE);
+        xcor = XMARGIN + column_g * SPACESIZE;
+        
         if(int((ycor+int(dropSpeed)-YMARGIN) / SPACESIZE)<row){
           ycor+=int(dropSpeed);
           dropSpeed+=0.5;
