@@ -6,14 +6,14 @@ int DIFFICULTY=2;
 int SPACESIZE=50;
 int FPS=30;
 int XMARGIN=(640-BOARDWIDTH*SPACESIZE)/2, YMARGIN=(480-BOARDHEIGHT*SPACESIZE)/2;
-int XREDPILE=int(SPACESIZE / 2); int YREDPILE=480 - int(3 * SPACESIZE / 2);
-int XYELLOWPILE=640 - int(3 * SPACESIZE / 2); int YYELLOWPILE=480 - int(3 * SPACESIZE / 2);
+int XLEFTPILE=int(SPACESIZE / 2); int YLEFTPILE=480 - int(3 * SPACESIZE / 2);
+int XRIGHTPILE=640 - int(3 * SPACESIZE / 2); int YRIGHTPILE=480 - int(3 * SPACESIZE / 2);
 boolean MULTIPLAYER = false;
 
 // variables
 Minim minim, minimTileFall;
 AudioPlayer backgroundMusic, tileFall;
-PImage backg, red, yellow, boardim, arrow, computer, human, tie, mainmenu, rules, redWon, yellowWon, mute, unmute, settings;
+PImage backg, chosenTheme, leftPlayer, rightPlayer, boardim, arrow, computer, human, tie, mainmenu, rules, leftPlayerWon, rightPlayerWon, mute, unmute, settings;
 PFont orbitron;
 int[][] board = new int[BOARDHEIGHT][BOARDWIDTH]; // human: 1, computer: -1
 
@@ -47,10 +47,10 @@ void setup(){
   
   backg=loadImage("background.png");
   backg.resize(640, 480);
-  red=loadImage("red.png");
-  red.resize(SPACESIZE, SPACESIZE);
-  yellow=loadImage("yellow.png");
-  yellow.resize(SPACESIZE, SPACESIZE);
+  leftPlayer=loadImage("red.png");
+  leftPlayer.resize(SPACESIZE, SPACESIZE);
+  rightPlayer=loadImage("yellow.png");
+  rightPlayer.resize(SPACESIZE, SPACESIZE);
   boardim=loadImage("boardim.png");
   boardim.resize(SPACESIZE, SPACESIZE);
   
@@ -59,8 +59,8 @@ void setup(){
   computer=loadImage("computer.png");
   human=loadImage("human.png");
   tie=loadImage("tie.png");
-  redWon = loadImage("redWon.png");
-  yellowWon = loadImage("yellowWon.png");
+  leftPlayerWon = loadImage("leftPlayerWon.png");
+  rightPlayerWon = loadImage("rightPlayerWon.png");
   
   mainmenu=loadImage("mainmenu.png");
   mainmenu.resize(640, 480);
@@ -187,6 +187,7 @@ void draw(){
       noStroke();
     ellipse(108, 423, 62, 62);
     fill(255,0,0);
+    
 
     if (mousePressed){
       if (overRect(195, 225, 250, 35)) {
@@ -222,6 +223,18 @@ void draw(){
         lightTheme(); t=1;
       }
     }
+    if (t == 0)
+      chosenTheme = loadImage("background.png");
+    else
+      chosenTheme = loadImage("backgroundl.png");
+    // resize to 62
+    chosenTheme.resize(62, 62);
+    image(chosenTheme, 20, 280);
+
+    stroke(255, 0, 0);
+    noFill();
+    rect(20 + 31, 280 + 31, 62, 62);
+
   }
   
   if (gameScreen==1 || gameScreen==2){
@@ -229,7 +242,7 @@ void draw(){
     drawTile(xcor,ycor,turn);
     drawBoard(board);
     
-    if (showHelp)
+    if (showHelp && !MULTIPLAYER)
       image(arrow, int(SPACESIZE / 2)+SPACESIZE, 470 - int(3 * SPACESIZE / 2));
   }
   
@@ -246,13 +259,15 @@ void draw(){
     textAlign(CENTER, CENTER);
     text("EXIT", 590, 25);
     fill(206, 66, 56); 
-    text("DIFFICULTY:", 90, 25);
-    if(DIFFICULTY==1)
-    text("EASY", 44, 55);
-    else if(DIFFICULTY==2)
-    text("MEDIUM", 60, 55);
-    else 
-    text("HARD", 46, 55);
+    if (!MULTIPLAYER) {
+      text("DIFFICULTY:", 90, 25);
+      if(DIFFICULTY==1)
+      text("EASY", 44, 55);
+      else if(DIFFICULTY==2)
+      text("MEDIUM", 60, 55);
+      else 
+      text("HARD", 46, 55);
+    }
     
     if (beginning==1){
       if (isFirstGame){
@@ -273,12 +288,12 @@ void draw(){
       getNewBoard();
       step=0;
       if(turn==1){
-        xcor=XREDPILE;
-        ycor=YREDPILE;
+        xcor=XLEFTPILE;
+        ycor=YLEFTPILE;
       }
       else {
-        xcor=XYELLOWPILE;
-        ycor=YYELLOWPILE;
+        xcor=XRIGHTPILE;
+        ycor=YRIGHTPILE;
       }
       beginning=0;
     }
@@ -302,19 +317,19 @@ void draw(){
       else text("Your turn!", 320, 40);
       
       if (step==0){
-          boolean redTurn = mouseX>XREDPILE 
-                            && mouseX<XREDPILE+SPACESIZE 
-                            && mouseY>YREDPILE 
-                            && mouseY<YREDPILE+SPACESIZE
+          boolean leftPlayerTurn = mouseX>XLEFTPILE 
+                            && mouseX<XLEFTPILE+SPACESIZE 
+                            && mouseY>YLEFTPILE 
+                            && mouseY<YLEFTPILE+SPACESIZE
                             && turn == 1;
-          boolean yellowTurn = mouseX>XYELLOWPILE 
-                            && mouseX<XYELLOWPILE+SPACESIZE 
-                            && mouseY>YYELLOWPILE 
-                            && mouseY<YYELLOWPILE+SPACESIZE
+          boolean rightPlayerTurn = mouseX>XRIGHTPILE 
+                            && mouseX<XRIGHTPILE+SPACESIZE 
+                            && mouseY>YRIGHTPILE 
+                            && mouseY<YRIGHTPILE+SPACESIZE
                             && turn == 0
                             && MULTIPLAYER;
-          if (mousePressed && draggingToken==false && (redTurn || yellowTurn)){
-          // start of dragging on red token pile
+          if (mousePressed && draggingToken==false && (leftPlayerTurn || rightPlayerTurn)){
+          // start of dragging on leftPlayer token pile
             draggingToken=true;
             xcor=mouseX-SPACESIZE/2;
             ycor=mouseY-SPACESIZE/2;
@@ -357,13 +372,13 @@ void draw(){
         if (turn == 1) {
           if (MULTIPLAYER) turn = 0;
           else turn=-1;
-          xcor = XYELLOWPILE;
-          ycor = YYELLOWPILE;
+          xcor = XRIGHTPILE;
+          ycor = YRIGHTPILE;
         }
         else if (turn == 0) {
           turn = 1;
-          xcor = XREDPILE;
-          ycor = YREDPILE;
+          xcor = XLEFTPILE;
+          ycor = YLEFTPILE;
         }
         humanMove=false;
         step=0;
@@ -380,8 +395,8 @@ void draw(){
         column_g=getComputerMove(DIFFICULTY);
         dropSpeed=1.0;
         speed=1.0;
-        xcor=XYELLOWPILE;
-        ycor=YYELLOWPILE;
+        xcor=XRIGHTPILE;
+        ycor=YRIGHTPILE;
         step=1;
       }
       else if (step==1){  
@@ -420,8 +435,8 @@ void draw(){
         }
         turn=1;
         step=0;
-        xcor=XREDPILE;
-        ycor=YREDPILE;
+        xcor=XLEFTPILE;
+        ycor=YLEFTPILE;
         
         playTileFall();
       }
@@ -438,11 +453,11 @@ void draw(){
      isFirstGame=false;
      imageMode(CENTER);
      if (winner==1) {
-       if (MULTIPLAYER) image(redWon, 640/2, 480/2);
+       if (MULTIPLAYER) image(leftPlayerWon, 640/2, 480/2);
        else image(human, 640/2, 480/2);
      }
      else if (winner==-1) {
-       if (MULTIPLAYER) image(yellowWon, 640/2, 480/2);
+       if (MULTIPLAYER) image(rightPlayerWon, 640/2, 480/2);
        else image(computer, 640/2, 480/2);
      }
      else
@@ -471,12 +486,84 @@ void draw(){
     textAlign(CENTER, CENTER);
     text("EXIT", 590, 25);
     fill(206, 66, 56);
+
+    // show leftPlayer and rightPlayer and resize them to SPACESIZE
+    imageMode(CENTER);
+    image(leftPlayer, XLEFTPILE+SPACESIZE/2, YLEFTPILE+SPACESIZE/2, SPACESIZE, SPACESIZE);
+    image(rightPlayer, XRIGHTPILE+SPACESIZE/2, YRIGHTPILE+SPACESIZE/2, SPACESIZE, SPACESIZE);
+
+  
+    // print location
+    if( mousePressed)
+      println(mouseX, mouseY);
     
     if (mousePressed && overRect(540, 0, 100, 50)) {
       beginning = 1;
       gameScreen = 0;
       backgroundMusic.loop();
     }
+    // when clicked, print coordinates
+    else if ( mousePressed && overCircle( 138, 252, 62 ))
+    {
+      // load "red.png" for leftPlayer
+      leftPlayer = loadImage("red.png");
+      leftPlayer.resize(SPACESIZE, SPACESIZE);
+    }
+    else if ( mousePressed && overCircle( 216, 252, 62 ))
+    {
+      // load "greenl.png" for leftPlayer
+      leftPlayer = loadImage("greenl.png");
+      leftPlayer.resize(SPACESIZE, SPACESIZE);
+    }
+    else if ( mousePressed && overCircle( 309, 252, 62 ))
+    {
+      // load "blue.png" for leftPlayer
+      leftPlayer = loadImage("blue.png");
+      leftPlayer.resize(SPACESIZE, SPACESIZE);
+    }
+    else if ( mousePressed && overCircle( 396, 252, 62 ))
+    {
+      // load "blue-green.png" for leftPlayer
+      leftPlayer = loadImage("blue-green.png");
+      leftPlayer.resize(SPACESIZE, SPACESIZE);
+    }
+    else if ( mousePressed && overCircle( 488, 252, 62 ))
+    {
+      // load "blue_special.png" for leftPlayer
+      leftPlayer = loadImage("blue_special.png");
+      leftPlayer.resize(SPACESIZE, SPACESIZE);
+    }
+    else if ( mousePressed && overCircle( 138, 381, 62 ))
+    {
+      // load "yellow.png" for rightPlayer
+      rightPlayer = loadImage("yellow.png");
+      rightPlayer.resize(SPACESIZE, SPACESIZE);
+    }
+    else if ( mousePressed && overCircle( 216, 381, 62 ))
+    {
+      // load "violet.png" for rightPlayer
+      rightPlayer = loadImage("violet.png");
+      rightPlayer.resize(SPACESIZE, SPACESIZE);
+    }
+    else if ( mousePressed && overCircle( 309, 381, 62 ))
+    {
+      // load "pink.png" for rightPlayer
+      rightPlayer = loadImage("pink.png");
+      rightPlayer.resize(SPACESIZE, SPACESIZE);
+    }
+    else if ( mousePressed && overCircle( 396, 381, 62 ))
+    {
+      // load "pink-blue.png" for rightPlayer
+      rightPlayer = loadImage("pink-blue.png");
+      rightPlayer.resize(SPACESIZE, SPACESIZE);
+    }
+    else if ( mousePressed && overCircle( 488, 381, 62 ))
+    {
+      // load "pink_special.png" for rightPlayer
+      rightPlayer = loadImage("pink_special.png");
+      rightPlayer.resize(SPACESIZE, SPACESIZE);
+    }
+
   }
 }
 
@@ -518,10 +605,10 @@ void mouseClicked(){
 void darkTheme(){
   backg=loadImage("background.png");
   backg.resize(640, 480);
-  red=loadImage("red.png");
-  red.resize(SPACESIZE, SPACESIZE);
-  yellow=loadImage("yellow.png");
-  yellow.resize(SPACESIZE, SPACESIZE);
+  leftPlayer=loadImage("red.png");
+  leftPlayer.resize(SPACESIZE, SPACESIZE);
+  rightPlayer=loadImage("yellow.png");
+  rightPlayer.resize(SPACESIZE, SPACESIZE);
   boardim=loadImage("boardim.png");
   boardim.resize(SPACESIZE, SPACESIZE);
 
@@ -530,10 +617,10 @@ void darkTheme(){
 void lightTheme(){
   backg=loadImage("backgroundl.png");
   backg.resize(640, 480);
-  red=loadImage("greenl.png");
-  red.resize(SPACESIZE, SPACESIZE);
-  yellow=loadImage("violet.png");
-  yellow.resize(SPACESIZE, SPACESIZE);
+  leftPlayer=loadImage("greenl.png");
+  leftPlayer.resize(SPACESIZE, SPACESIZE);
+  rightPlayer=loadImage("violet.png");
+  rightPlayer.resize(SPACESIZE, SPACESIZE);
   boardim=loadImage("boardl.png");
   boardim.resize(SPACESIZE, SPACESIZE);
 }
@@ -548,8 +635,8 @@ void drawBoard(int[][] currBoard){
   int x=XMARGIN, y=YMARGIN;
   for (int j=0 ; j<BOARDWIDTH ; ++j){
     for (int i=0 ; i<BOARDHEIGHT ; ++i){
-      if (currBoard[i][j]==1) image(red, x, y);
-      else if (currBoard[i][j]==-1) image(yellow, x, y);
+      if (currBoard[i][j]==1) image(leftPlayer, x, y);
+      else if (currBoard[i][j]==-1) image(rightPlayer, x, y);
       image(boardim, x, y);
       y+=SPACESIZE;
     }
@@ -557,13 +644,13 @@ void drawBoard(int[][] currBoard){
     x+=SPACESIZE;
   }
   
-  image(red, XREDPILE, YREDPILE);
-  image(yellow, XYELLOWPILE, YYELLOWPILE);
+  image(leftPlayer, XLEFTPILE, YLEFTPILE);
+  image(rightPlayer, XRIGHTPILE, YRIGHTPILE);
 }
 
 void drawTile(int x, int y, int player){
-  if (player==-1 || player==0) image(yellow, x, y);
-  else image(red, x, y);
+  if (player==-1 || player==0) image(rightPlayer, x, y);
+  else image(leftPlayer, x, y);
 }
 
 void getNewBoard(){
