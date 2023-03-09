@@ -17,6 +17,9 @@ PImage backg, chosenTheme, leftPlayer, rightPlayer, boardim, arrow, computer, hu
 PFont orbitron;
 int[][] board = new int[BOARDHEIGHT][BOARDWIDTH]; // human: 1, computer: -1
 
+int[][][] historyBoard = new int[100][BOARDHEIGHT][BOARDWIDTH];
+int move = 0;
+
 int column_g;
 int xcor, ycor; // coordinates of the currently active tile
 int step;
@@ -328,6 +331,42 @@ void draw(){
                             && mouseY<YRIGHTPILE+SPACESIZE
                             && turn == 0
                             && MULTIPLAYER;
+          
+          if (move > 0)
+          {
+            // make clickable undo button
+            rect(50, 100, 100, 50);
+            // write text undo
+            fill(200, 0, 0);
+            text("UNDO", 50, 100);
+          }
+          // when hovering over undo button, change color
+          if (mouseX > 0 && mouseX < 100 && mouseY > 75 && mouseY < 125 && move > 0){
+            fill(150, 0, 0);
+            rect(50, 100, 100, 50);
+            fill(200, 0, 0);
+            text("UNDO", 50, 100);
+          }
+          else if (move > 0)
+          {
+            fill(200, 0, 0);
+            rect(50, 100, 100, 50);
+            fill(255, 255, 255);
+            text("UNDO", 50, 100);
+          }
+          
+          // if undo button is clicked and move > 0, change color of undo button
+          if (mousePressed && mouseX > 0 && mouseX < 100 && mouseY > 75 && mouseY < 125 && move > 0)
+          {
+            fill(255, 0, 0);
+            rect(50, 100, 100, 50);
+            fill(255, 255, 255);
+            text("UNDO", 50, 100);
+            // undo move
+            undoMove();
+          }
+
+          
           if (mousePressed && draggingToken==false && (leftPlayerTurn || rightPlayerTurn)){
           // start of dragging on leftPlayer token pile
             draggingToken=true;
@@ -349,6 +388,23 @@ void draw(){
         int row=getLowestEmptySpace(board, column_g);
         column_g=(int)((xcor+SPACESIZE/2-XMARGIN)/SPACESIZE);
         xcor = XMARGIN + column_g * SPACESIZE;
+        
+
+        //if (move > 0)
+        //  println(equal(board, historyBoard[move - 1]));
+        println("move: " + move);
+        if (move == 0)
+        {
+          copy(board, historyBoard[move]);
+          move++;
+        }
+        else if (move > 0 && !equal(board, historyBoard[move - 1]))
+        {
+          copy(board, historyBoard[move]);
+          move++;
+          println(move);
+        }
+        
         
         if(int((ycor+int(dropSpeed)-YMARGIN) / SPACESIZE)<row){
           ycor+=int(dropSpeed);
@@ -812,4 +868,64 @@ void playTileFall() {
   minimTileFall = new Minim(this);
   tileFall = minimTileFall.loadFile("plastic fall.mp3");
   tileFall.play();
+}
+
+long currentTime = 0;
+
+void undoMove() {
+  if (move > 0 && millis() - currentTime > 1000) {
+    // board = lastBoard;
+    for (int i = 0; i < BOARDHEIGHT; i++) {
+      for (int j = 0; j < BOARDWIDTH; j++) {
+        board[i][j] = historyBoard[move - 1][i][j];
+        historyBoard[move - 1][i][j] = 0;
+      }
+    } 
+
+    // remove last board from history of type int[][][]
+    
+    
+    move--;
+
+    // get current time in milliseconds
+    currentTime = millis();
+
+    if (MULTIPLAYER)
+    {
+      if (turn == 1)
+      {
+        turn = 0;
+      }
+      else
+      {
+        turn = 1;
+      }
+    }
+  }
+}
+
+boolean equal(int[][] a, int[][] b)
+{
+  for (int i = 0; i < a.length; i++)
+  {
+    for (int j = 0; j < a[i].length; j++)
+    {
+      if (a[i][j] != b[i][j])
+      {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+void copy(int[][] a, int[][] b)
+{
+  for (int i = 0; i < a.length; i++)
+  {
+    for (int j = 0; j < a[i].length; j++)
+    {
+      b[i][j] = a[i][j];
+    }
+  }
 }
