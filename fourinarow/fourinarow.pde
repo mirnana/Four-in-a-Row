@@ -9,11 +9,12 @@ int XMARGIN=(640-BOARDWIDTH*SPACESIZE)/2, YMARGIN=(480-BOARDHEIGHT*SPACESIZE)/2;
 int XLEFTPILE=int(SPACESIZE / 2); int YLEFTPILE=480 - int(3 * SPACESIZE / 2);
 int XRIGHTPILE=640 - int(3 * SPACESIZE / 2); int YRIGHTPILE=480 - int(3 * SPACESIZE / 2);
 boolean MULTIPLAYER = false;
+boolean first=false;
 
 // variables
 Minim minim, minimTileFall;
 AudioPlayer backgroundMusic, tileFall;
-PImage backg, chosenTheme, leftPlayer, rightPlayer, boardim, arrow, computer, human, tie, mainmenu, rules, leftPlayerWon, rightPlayerWon, mute, unmute, settings;
+PImage backg, chosenTheme, leftPlayer, rightPlayer, boardim, arrow, computer, computer2, human, human2, tie, tie2, mainmenu, rules, leftPlayerWon, rightPlayerWon, mute, unmute, settings;
 PFont orbitron;
 int[][] board = new int[BOARDHEIGHT][BOARDWIDTH]; // human: 1, computer: -1
 
@@ -35,6 +36,8 @@ int tokenx, tokeny;
 boolean mouseR;
 int winner;
 boolean win;
+
+int left_res=0, right_res=0;
 
 int r, t; // r: rules, t==0: dark theme, t==1; light theme
 boolean muted;
@@ -60,8 +63,11 @@ void setup(){
   arrow=loadImage("arrow.png");
   arrow.resize(int(SPACESIZE*3.75),int(1.5*SPACESIZE));
   computer=loadImage("computer.png");
+  computer2=loadImage("computer2.png");
   human=loadImage("human.png");
+  human2=loadImage("human2.png");
   tie=loadImage("tie.png");
+  tie2=loadImage("tie2.png");
   leftPlayerWon = loadImage("leftPlayerWon.png");
   rightPlayerWon = loadImage("rightPlayerWon.png");
   
@@ -98,7 +104,8 @@ void setup(){
 void draw(){
   if (gameScreen==0){
     background(mainmenu);
-    
+    left_res=0;
+    right_res=0;
     imageMode(CENTER);
     if(muted) image(unmute, 55, 55);
     else image(mute, 55, 55);
@@ -238,7 +245,7 @@ void draw(){
     noFill();
     rect(20 + 31, 280 + 31, 62, 62);
 
-  }
+  } //end of main menu
   
   if (gameScreen==1 || gameScreen==2){
     background(backg);
@@ -270,6 +277,16 @@ void draw(){
       text("MEDIUM", 60, 55);
       else 
       text("HARD", 46, 55);
+      textSize(20);
+      text("HUMAN", 70,200);
+      text("COMPUTER",565,200);
+      fill(206, 66, 56);
+      rect(70,225, 40,25);
+      rect(565,225, 40,25);
+      textSize(25);
+      fill(255,255,255);
+      text(left_res,70,225);
+      text(right_res,565,225);
     }
     
     if (beginning==1){
@@ -421,6 +438,7 @@ void draw(){
         
         if (isWinner(board, p)){
           winner=p;
+          first=true;
           gameScreen=2; // RESTART
           win=true;
           backgroundMusic.loop();
@@ -485,6 +503,7 @@ void draw(){
         makeMove(board, -1, column_g);
         if (isWinner(board, -1)){
           winner=-1;
+          first=true;
           gameScreen=2; // RESTART
           win=true;
           backgroundMusic.loop();
@@ -500,24 +519,154 @@ void draw(){
   
     if (!win && isBoardFull(board)){
       winner=2;
+      first=true;
       gameScreen=2; // RESTART
       backgroundMusic.loop();
     }
-  }
+  } // end of game
   
   if(gameScreen==2){
      isFirstGame=false;
+   
      imageMode(CENTER);
      if (winner==1) {
-       if (MULTIPLAYER) image(leftPlayerWon, 640/2, 480/2);
-       else image(human, 640/2, 480/2);
+         if (MULTIPLAYER) image(leftPlayerWon, 640/2, 480/2);
+         else 
+         {
+           if(first == true)
+           {
+             left_res++;
+             first=false;
+           }
+             image(human2, 640/2, 480/2);
+             stroke(206, 66, 56);
+             if (overRect(195, 313, 250, 35))
+                fill(185, 59, 50);
+             else {
+              
+              fill(206, 66, 56);
+                   }
+              rect(320, 330, 250, 35);
+              if (overRect(195, 358, 250, 35))
+                fill(185, 59, 50);
+             else {
+              
+              fill(206, 66, 56);
+                   }
+              rect(320, 375, 250, 35);
+              textFont(orbitron);
+              fill(0, 0, 0);
+               text("Play again", 320, 330);
+               text("Main menu", 320, 375);
+               if(mousePressed)
+               {
+                 if(overRect(195, 313, 250, 35))
+                 {
+                   beginning=1;
+                   gameScreen=1;
+                   backgroundMusic.pause();
+                   
+                 }
+                 if (overRect(195, 358, 250, 35))
+                 {
+                   
+                    gameScreen = 0;
+                    beginning=1;
+
+                 }
+               }
+             
+       }
      }
      else if (winner==-1) {
        if (MULTIPLAYER) image(rightPlayerWon, 640/2, 480/2);
-       else image(computer, 640/2, 480/2);
+       else 
+       {
+         image(computer2, 640/2, 480/2);
+         
+         if(first == true)
+           {
+             right_res++;
+             first=false;
+           }
+         stroke(206, 66, 56);
+             if (overRect(195, 313, 250, 35))
+                fill(185, 59, 50);
+             else {
+              
+              fill(206, 66, 56);
+                   }
+              rect(320, 330, 250, 35);
+              if (overRect(195, 358, 250, 35))
+                fill(185, 59, 50);
+             else {
+              
+              fill(206, 66, 56);
+                   }
+              rect(320, 375, 250, 35);
+              textFont(orbitron);
+              fill(0, 0, 0);
+               text("Play again", 320, 330);
+               text("Main menu", 320, 375);
+               if(mousePressed)
+               {
+                 if(overRect(195, 313, 250, 35))
+                 {
+                   beginning=1;
+                   gameScreen=1;
+                   backgroundMusic.pause();
+              
+                 }
+                 if (overRect(195, 358, 250, 35))
+                 {
+                    beginning=1;
+                    gameScreen = 0;
+
+                 }
+               }
+         
+       }
+       
      }
      else
+     {
        image(tie, 640/2, 480/2);
+        stroke(206, 66, 56);
+             if (overRect(195, 313, 250, 35))
+                fill(185, 59, 50);
+             else {
+              
+              fill(206, 66, 56);
+                   }
+              rect(320, 330, 250, 35);
+              if (overRect(195, 358, 250, 35))
+                fill(185, 59, 50);
+             else {
+              
+              fill(206, 66, 56);
+                   }
+              rect(320, 375, 250, 35);
+              textFont(orbitron);
+              fill(0, 0, 0);
+               text("Play again", 320, 330);
+               text("Main menu", 320, 375);
+               if(mousePressed)
+               {
+                 if(overRect(195, 313, 250, 35))
+                 {
+                   backgroundMusic.pause();
+                   beginning=1;
+                   gameScreen=1;
+                   
+                 }
+                 if (overRect(195, 358, 250, 35))
+                 {
+                  
+                    gameScreen = 0;
+                    beginning=1;
+                 }
+               }
+     }
      imageMode(CORNER);
      win=false;
   }
@@ -638,7 +787,7 @@ boolean overCircle(int x, int y, int diameter) {
 }
 
 void mouseClicked(){
-	if (gameScreen==2){
+	if (gameScreen==2 && MULTIPLAYER){
 		beginning=1;
     gameScreen=0;
 	}
