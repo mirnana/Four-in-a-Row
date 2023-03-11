@@ -288,6 +288,18 @@ void draw(){
       text(left_res,70,225);
       text(right_res,565,225);
     }
+    else
+    {   
+      text("LEFT", 70,200);
+      text("RIGHT",565,200);
+      fill(206, 66, 56);
+      rect(70,225, 40,25);
+      rect(565,225, 40,25);
+
+      fill(255,255,255);
+      text(left_res,70,225);
+      text(right_res,565,225);
+    }
     
     if (beginning==1){
       if (isFirstGame){
@@ -530,7 +542,52 @@ void draw(){
    
      imageMode(CENTER);
      if (winner==1) {
-         if (MULTIPLAYER) image(leftPlayerWon, 640/2, 480/2);
+         if (MULTIPLAYER){ 
+            if(first == true)
+           {
+             left_res++;
+             first=false;
+           }
+           image(leftPlayerWon, 640/2, 480/2);
+             stroke(206, 66, 56);
+             if (overRect(195, 280, 250, 35))
+                fill(185, 59, 50);
+             else {
+              
+              fill(255, 255, 255);
+                   }
+              rect(320, 297, 250, 35);
+              if (overRect(195, 325, 250, 35))
+                fill(185, 59, 50);
+             else {
+              
+              fill(255, 255, 255);
+                   }
+              rect(320, 342, 250, 35);
+              textFont(orbitron);
+              fill(0, 0, 0);
+               text("Play again", 320, 297);
+               text("Main menu", 320, 342);
+               if(mousePressed)
+               {
+                 if (overRect(195, 280, 250, 35))
+
+                 {
+                   beginning=1;
+                   gameScreen=1;
+                   backgroundMusic.pause();
+                   
+                 }
+                 if (overRect(195, 325, 250, 35))
+                 {
+                   
+                    gameScreen = 0;
+                    beginning=1;
+
+                 }
+               }
+         
+       }
          else 
          {
            if(first == true)
@@ -539,35 +596,36 @@ void draw(){
              first=false;
            }
              image(human2, 640/2, 480/2);
-             stroke(206, 66, 56);
-             if (overRect(195, 313, 250, 35))
+                     stroke(206, 66, 56);
+             if (overRect(195, 280, 250, 35))
                 fill(185, 59, 50);
              else {
               
-              fill(206, 66, 56);
+              fill(255, 255, 255);
                    }
-              rect(320, 330, 250, 35);
-              if (overRect(195, 358, 250, 35))
+              rect(320, 297, 250, 35);
+              if (overRect(195, 325, 250, 35))
                 fill(185, 59, 50);
              else {
               
-              fill(206, 66, 56);
+              fill(255, 255, 255);
                    }
-              rect(320, 375, 250, 35);
+              rect(320, 342, 250, 35);
               textFont(orbitron);
               fill(0, 0, 0);
-               text("Play again", 320, 330);
-               text("Main menu", 320, 375);
+               text("Play again", 320, 297);
+               text("Main menu", 320, 342);
                if(mousePressed)
                {
-                 if(overRect(195, 313, 250, 35))
+                 if (overRect(195, 280, 250, 35))
+
                  {
                    beginning=1;
                    gameScreen=1;
                    backgroundMusic.pause();
                    
                  }
-                 if (overRect(195, 358, 250, 35))
+                 if (overRect(195, 325, 250, 35))
                  {
                    
                     gameScreen = 0;
@@ -575,11 +633,56 @@ void draw(){
 
                  }
                }
-             
-       }
+     }
      }
      else if (winner==-1) {
-       if (MULTIPLAYER) image(rightPlayerWon, 640/2, 480/2);
+       if (MULTIPLAYER)
+       {
+         image(rightPlayerWon, 640/2, 480/2);
+         if(first == true)
+           {
+             right_res++;
+             first=false;
+           }
+             stroke(206, 66, 56);
+             if (overRect(195, 280, 250, 35))
+                fill(185, 59, 50);
+             else {
+              
+              fill(255, 255, 255);
+                   }
+              rect(320, 297, 250, 35);
+              if (overRect(195, 325, 250, 35))
+                fill(185, 59, 50);
+             else {
+              
+              fill(255, 255, 255);
+                   }
+              rect(320, 342, 250, 35);
+              textFont(orbitron);
+              fill(0, 0, 0);
+               text("Play again", 320, 297);
+               text("Main menu", 320, 342);
+               if(mousePressed)
+               {
+                 if (overRect(195, 280, 250, 35))
+
+                 {
+                   beginning=1;
+                   gameScreen=1;
+                   backgroundMusic.pause();
+                   
+                 }
+                 if (overRect(195, 325, 250, 35))
+                 {
+                   
+                    gameScreen = 0;
+                    beginning=1;
+
+                 }
+               }
+         
+     }
        else 
        {
          image(computer2, 640/2, 480/2);
@@ -589,38 +692,40 @@ void draw(){
              right_res++;
              first=false;
            }
-         stroke(206, 66, 56);
-             if (overRect(195, 313, 250, 35))
+                     stroke(206, 66, 56);
+             if (overRect(195, 280, 250, 35))
                 fill(185, 59, 50);
              else {
               
-              fill(206, 66, 56);
+              fill(255, 255, 255);
                    }
-              rect(320, 330, 250, 35);
-              if (overRect(195, 358, 250, 35))
+              rect(320, 297, 250, 35);
+              if (overRect(195, 325, 250, 35))
                 fill(185, 59, 50);
              else {
               
-              fill(206, 66, 56);
+              fill(255, 255, 255);
                    }
-              rect(320, 375, 250, 35);
+              rect(320, 342, 250, 35);
               textFont(orbitron);
               fill(0, 0, 0);
-               text("Play again", 320, 330);
-               text("Main menu", 320, 375);
+               text("Play again", 320, 297);
+               text("Main menu", 320, 342);
                if(mousePressed)
                {
-                 if(overRect(195, 313, 250, 35))
+                 if (overRect(195, 280, 250, 35))
+
                  {
                    beginning=1;
                    gameScreen=1;
                    backgroundMusic.pause();
-              
+                   
                  }
-                 if (overRect(195, 358, 250, 35))
+                 if (overRect(195, 325, 250, 35))
                  {
-                    beginning=1;
+                   
                     gameScreen = 0;
+                    beginning=1;
 
                  }
                }
@@ -787,10 +892,10 @@ boolean overCircle(int x, int y, int diameter) {
 }
 
 void mouseClicked(){
-	if (gameScreen==2 && MULTIPLAYER){
+/*	if (gameScreen==2 && MULTIPLAYER){
 		beginning=1;
     gameScreen=0;
-	}
+	} */
   if (gameScreen==3 && r>5){
     gameScreen=0;
     r=0;
